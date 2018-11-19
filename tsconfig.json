@@ -16,6 +16,14 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "ngx-cdk-responsive": [
+        "dist/ngx-cdk-responsive"
+      ],
+      "ngx-cdk-responsive/*": [
+        "dist/ngx-cdk-responsive/*"
+      ]
+    }
   }
 }

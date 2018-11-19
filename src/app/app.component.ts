@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {Observe} from 'ngx-cdk-responsive';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,15 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'ngx-mat-responsive-app';
+  i = 0;
+
+  readonly observePoints = [Observe.ORIENTATION, ...Observe.ANY_WINDOW_CHANGE];
+
+  incr() {
+    this.i++;
+  }
+
+  hasChanged(newSize: string) {
+    console.log('newSize:', newSize);
+  }
 }

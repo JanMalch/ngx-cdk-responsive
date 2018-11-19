@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ngx-mat-responsive-app": {
+    "ngx-cdk-responsive-app": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/ngx-mat-responsive-app",
+            "outputPath": "docs",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -23,6 +23,7 @@
               "src/assets"
             ],
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.css"
             ],
             "scripts": []
@@ -57,18 +58,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "ngx-mat-responsive-app:build"
+            "browserTarget": "ngx-cdk-responsive-app:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "ngx-mat-responsive-app:build:production"
+              "browserTarget": "ngx-cdk-responsive-app:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ngx-mat-responsive-app:build"
+            "browserTarget": "ngx-cdk-responsive-app:build"
           }
         },
         "test": {
@@ -79,6 +80,7 @@
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.css"
             ],
             "scripts": [],
@@ -102,7 +104,7 @@
         }
       }
     },
-    "ngx-mat-responsive-app-e2e": {
+    "ngx-cdk-responsive-app-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "prefix": "",
@@ -111,11 +113,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "ngx-mat-responsive-app:serve"
+            "devServerTarget": "ngx-cdk-responsive-app:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "ngx-mat-responsive-app:serve:production"
+              "devServerTarget": "ngx-cdk-responsive-app:serve:production"
             }
           }
         },
@@ -129,7 +131,42 @@
           }
         }
       }
+    },
+    "ngx-cdk-responsive": {
+      "root": "projects/ngx-cdk-responsive",
+      "sourceRoot": "projects/ngx-cdk-responsive/src",
+      "projectType": "library",
+      "prefix": "rsp",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/ngx-cdk-responsive/tsconfig.lib.json",
+            "project": "projects/ngx-cdk-responsive/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ngx-cdk-responsive/src/test.ts",
+            "tsConfig": "projects/ngx-cdk-responsive/tsconfig.spec.json",
+            "karmaConfig": "projects/ngx-cdk-responsive/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/ngx-cdk-responsive/tsconfig.lib.json",
+              "projects/ngx-cdk-responsive/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
-  "defaultProject": "ngx-mat-responsive-app"
+  "defaultProject": "ngx-cdk-responsive-app"
 }
