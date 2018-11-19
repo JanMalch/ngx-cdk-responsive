@@ -79,7 +79,7 @@ You can add a fallback case with `responsiveDefault` if no other breakpoint matc
 ```html
 <ng-container responsive>
   <p *responsiveCase="'<= Small'">Small</p>
-  <p *responsiveDefault'">Default</p>
+  <p *responsiveDefault>Default</p>
 </ng-container>
 ```
 
@@ -112,6 +112,6 @@ hasChanged(newSize: string) {
 The `Observe` namespace contain triggers for the following cases:
 
 * `ORIENTATION` → orientation changes
-* `MAX_WIDTH` → `max_width` query matching changes (e.g. window was below given `max_width`, now not anymore)
-* `MIN_WIDTH` → `min_width` query matching changes
+* `MAX_WIDTH(value: number, unit: string = "px")` → `max_width` query matching changes (e.g. window was below given `max_width`, now above)
+* `MIN_WIDTH(value: number, unit: string = "px")` → `min_width` query matching changes
 * `ANY_WINDOW_CHANGE` → Whenever one of the 5 window sizes `xs, s, m, l, xl` changes.
