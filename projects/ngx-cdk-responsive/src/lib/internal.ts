@@ -3,7 +3,7 @@ import {Breakpoints} from '@angular/cdk/layout';
 const regexMinWidth = /\(min-width: \d+?px\)/g;
 const regexMaxWidth = /\(max-width: (\d|\.)+?px\)/g;
 
-export const AllBreakpoints = Object.entries(Breakpoints).reduce((acc, [key, value]) => {
+const BreakpointGenerator = Object.entries(Breakpoints).reduce((acc, [key, value]) => {
   const keyAndSmaller = key + ' and smaller';
   const keyAndLarger = key + ' and larger';
 
@@ -15,3 +15,4 @@ export const AllBreakpoints = Object.entries(Breakpoints).reduce((acc, [key, val
   acc[keyAndLarger] = valueAndLarger;
   return acc;
 }, {});
+

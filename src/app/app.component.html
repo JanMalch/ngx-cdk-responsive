@@ -1,8 +1,16 @@
 <h1>ngx-cdk-responsive Demo</h1>
-<ng-container responsive [observe]="observePoints" (updated)="hasChanged($event)">
+<ng-container responsiveSwitch [observe]="observePoints">
   <p *responsiveCase="'<= Small'">Small {{ i }}</p>
   <p *responsiveCase="'Medium'">Medium {{ i }}</p>
   <p *responsiveCase="'Large and larger'">Large {{ i }}</p>
 </ng-container>
+<hr>
+<p *responsive="{'Small and smaller': onSmall}; observe: observePoints; updated: onChange$" >
+  Default
+</p>
+
+<ng-template #onSmall>
+  <p>Small and smaller</p>
+</ng-template>
 
 <button (click)="incr()">++</button>

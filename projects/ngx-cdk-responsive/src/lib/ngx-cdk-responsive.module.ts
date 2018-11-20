@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
-import {ResponsiveCaseDirective, ResponsiveDirective} from './responsive.directive';
+import {ResponsiveCaseDirective, ResponsiveSwitchDirective} from './responsive-switch.directive';
+import { ResponsiveDirective } from './responsive.directive';
 
 @NgModule({
-  declarations: [ResponsiveCaseDirective, ResponsiveDirective],
+  declarations: [ResponsiveCaseDirective, ResponsiveSwitchDirective, ResponsiveDirective],
   imports: [],
-  exports: [ResponsiveCaseDirective, ResponsiveDirective]
+  exports: [ResponsiveCaseDirective, ResponsiveSwitchDirective, ResponsiveDirective]
 })
 export class NgxCdkResponsiveModule { }
