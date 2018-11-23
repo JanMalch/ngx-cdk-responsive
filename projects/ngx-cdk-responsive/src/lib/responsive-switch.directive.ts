@@ -1,17 +1,72 @@
-import {Directive, EventEmitter, Host, Input, OnDestroy, OnInit, Output, TemplateRef, ViewContainerRef} from '@angular/core';
+import {
+  AfterViewInit,
+  ContentChildren,
+  Directive,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  Output,
+  QueryList,
+  TemplateRef,
+  ViewContainerRef
+} from '@angular/core';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {Subscription} from 'rxjs';
 import {AllBreakpoints} from './models';
 
+
+@Directive({
+  selector: '[responsiveCase], [responsiveDefault]' // tslint:disable-line
+})
+export class ResponsiveCaseDirective {
+
+  @Input('responsiveCase') set responsiveCase(size: string) {
+    this._size = this.normalizeSize(size);
+  }
+
+  @Input('responsiveDefault') set responsiveDefault(_: null | never) {
+    this._size = 'Default';
+  }
+
+  private _size: string;
+
+  get size(): string {
+    return this._size;
+  }
+
+  constructor(public readonly templateRef: TemplateRef<any>) {
+  }
+
+  normalizeSize(input: string): string {
+    if (input === null) {
+      throw new Error('No \'size\' passed. Use \'responsive.default\' for default case.');
+    }
+
+    input = input.startsWith('<=') ? input.substring(2).trim() + ' and smaller' : input;
+    input = input.startsWith('>=') ? input.substring(2).trim() + ' and larger' : input;
+
+    if (!(input in AllBreakpoints)) {
+      throw new Error(`No such size '${input}'. Choose either prefix, suffix, or none.
+Available base breakpoints: '${Object.keys(Breakpoints).join('\', \'')}'.
+Available prefixes: '<= ', '>= '.
+Available suffixes: ' and smaller', ' and larger'.`);
+    }
+
+    return input;
+  }
+}
+
 @Directive({
   selector: '[responsiveSwitch]' // tslint:disable-line
 })
-export class ResponsiveSwitchDirective implements OnInit, OnDestroy {
+export class ResponsiveSwitchDirective implements OnDestroy, AfterViewInit {
 
   @Input() observe: string[];
   @Output() update = new EventEmitter<string>();
 
-  private registeredTemplates: {[size: string]: TemplateRef<any>} = {};
+  @ContentChildren(ResponsiveCaseDirective) private contentChildren: QueryList<ResponsiveCaseDirective>;
+
+  private registeredTemplates: { [size: string]: TemplateRef<any> } = {};
   private defaultTemplate: TemplateRef<any>;
   private sub: Subscription;
 
@@ -19,20 +74,21 @@ export class ResponsiveSwitchDirective implements OnInit, OnDestroy {
               private breakpoints: BreakpointObserver) {
   }
 
-  ngOnInit() {
+  ngAfterViewInit(): void {
+    const children = this.contentChildren.toArray();
+    this.registeredTemplates = children.filter(c => c.size !== 'Default')
+      .reduce((acc, curr) => {
+        acc[curr.size] = curr.templateRef;
+        return acc;
+      }, {});
+
+    const defaultCase = children.find(c => c.size === 'Default');
+    this.defaultTemplate = defaultCase !== undefined ? defaultCase.templateRef : undefined;
+
+    setTimeout(() => this.render(), 0);
     if (this.observe !== undefined && this.observe.length > 0) {
       this.sub = this.breakpoints.observe(this.observe).subscribe(() => this.render());
     }
-  }
-
-  register(size: string, template: TemplateRef<any>) {
-    this.registeredTemplates[size.trim()] = template;
-    this.render();
-  }
-
-  registerDefault(template: TemplateRef<any>) {
-    this.defaultTemplate = template;
-    this.render();
   }
 
   render() {
@@ -55,43 +111,3 @@ export class ResponsiveSwitchDirective implements OnInit, OnDestroy {
 
 }
 
-
-@Directive({
-  selector: '[responsiveCase], [responsiveDefault]' // tslint:disable-line
-})
-export class ResponsiveCaseDirective {
-
-  @Input('responsiveCase') set responsiveCase(size: string) {
-    if (size === null) {
-      throw new Error('No \'size\' passed. Use \'responsive.default\' for default case.');
-    }
-
-    size = size.startsWith('<=') ? size.substring(2).trim() + ' and smaller' : size;
-    size = size.startsWith('>=') ? size.substring(2).trim() + ' and larger' : size;
-
-    if (!(size in AllBreakpoints)) {
-      throw new Error(`No such size '${size}'. Choose either prefix, suffix, or none.
-Available base breakpoints: '${Object.keys(Breakpoints).join('\', \'')}'.
-Available prefixes: '<= ', '>= '.
-Available suffixes: ' and smaller', ' and larger'.`);
-    }
-    this.registerTemplate(size);
-  }
-
-  @Input('responsiveDefault') set responsiveDefault(_) {
-    this.registerDefault();
-  }
-
-  constructor(private templateRef: TemplateRef<any>,
-              @Host() private host: ResponsiveSwitchDirective) {
-  }
-
-  registerTemplate(breakpoint: string) {
-    this.host.register(breakpoint, this.templateRef);
-  }
-
-  registerDefault() {
-    this.host.registerDefault(this.templateRef);
-  }
-
-}
