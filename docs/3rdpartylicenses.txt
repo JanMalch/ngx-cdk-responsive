@@ -320,6 +320,7 @@ THE SOFTWARE.
 
 
 ngx-cdk-responsive
+MIT
 
 @angular/platform-browser
 MIT
