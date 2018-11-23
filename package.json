@@ -8,7 +8,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "lib": "ng build ngx-cdk-responsive"
+    "lib": "ng build ngx-cdk-responsive",
+    "docs": "ng build --prod --base-href=https://janmalch.github.io/ngx-cdk-responsive/"
   },
   "private": true,
   "dependencies": {
